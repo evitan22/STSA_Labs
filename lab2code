@@ -1,0 +1,97 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #FFF59D
+skinparam classBorderColor #000
+skinparam shadowing false
+
+' ==== ENUM ====
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+' ==== CLASSES ====
+class User {
+  -id : String
+  -name : String
+  -email : String
+  -phone : String
+  +login(email : String, password : String) : boolean
+  +getName() : String
+}
+
+class Guest {
+}
+
+class Table {
+  -id : String
+  -capacity : int
+  -location : String
+  +isAvailable(dateTime : LocalDateTime) : boolean
+}
+
+class Reservation {
+  -id : String
+  -userId : String
+  -tableId : String
+  -dateTime : LocalDateTime
+  -status : ReservationStatus
+  +calculateDuration() : int
+}
+
+class MenuItem {
+  -id : String
+  -name : String
+  -price : double
+  -description : String
+}
+
+class Order {
+  -id : String
+  -userId : String
+  -items : List<OrderItem>
+  -createdAt : LocalDateTime
+  -totalAmount : double
+  +calculateTotal() : double
+}
+
+class OrderItem {
+  -menuItem : MenuItem
+  -quantity : int
+  +getSubtotal() : double
+}
+
+class PaymentService {
+  +processPayment(order : Order, paymentInfo : String) : boolean
+  +refund(orderId : String) : boolean
+}
+
+class Manager {
+  +viewReservations()
+  +confirmReservation(reservationId : Reservation) : boolean
+  +rejectReservation(reservationId : Reservation) : boolean
+}
+
+class MenuService {
+  +addMenuItem(item : MenuItem)
+  +removeMenuItem(id : String)
+  +updateMenuItem(item : MenuItem)
+}
+
+' ==== RELATIONSHIPS ====
+
+User "1" -- "0..*" Reservation : makes >
+User "1" -- "0..*" Order : creates >
+
+Reservation "1" --> "1" Table : table >
+Reservation --> ReservationStatus
+
+Order "1" --> "1..*" OrderItem
+OrderItem --> MenuItem
+
+Manager --> Reservation : manages >
+Manager --> MenuService : edits >
+
+PaymentService --> Order : < handles
+@enduml

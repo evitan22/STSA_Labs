@@ -1,0 +1,28 @@
+@startuml
+skinparam sequenceMessageAlign center
+skinparam participantBackgroundColor #FFF59D
+skinparam participantBorderColor #000
+
+actor User
+participant "ReservationSystem" as RS
+participant "TableService" as TS
+participant "Manager" as M
+
+== Перегляд столиків ==
+User -> RS : переглянути доступні столики(dateTime)
+RS -> TS : getAvailableTables(dateTime)
+TS --> RS : список доступних столиків
+RS --> User : показати список столиків
+
+== Створення запиту на бронювання ==
+User -> RS : створити бронювання(tableId, dateTime)
+RS -> TS : перевірити доступність(tableId, dateTime)
+TS --> RS : столик вільний
+
+RS -> M : надіслати запит на підтвердження
+M -> M : перегляд деталей бронювання
+M --> RS : підтвердження бронювання
+
+RS --> User : повідомлення: "Бронювання підтверджено"
+
+@enduml
