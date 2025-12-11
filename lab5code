@@ -1,0 +1,27 @@
+@startuml
+skinparam state {
+  BackgroundColor #FFF59D
+  BorderColor #000
+  Shadowing false
+}
+
+[*] --> New : створення бронювання
+
+state New {
+}
+
+New --> Pending : очікування підтвердження
+Pending --> Confirmed : менеджер підтвердив
+Pending --> Rejected : менеджер відхилив
+
+Confirmed --> Active : час бронювання настав
+Active --> Completed : клієнт відвідав ресторан
+
+Pending --> Cancelled : користувач скасував
+Confirmed --> Cancelled : користувач скасував до прибуття
+
+Rejected --> [*]
+Completed --> [*]
+Cancelled --> [*]
+
+@enduml

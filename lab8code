@@ -1,0 +1,79 @@
+@startuml
+!theme plain
+
+skinparam rectangle {
+  BackgroundColor #FFF59D
+  BorderColor #000
+}
+
+' === СУТНОСТІ ===
+
+entity "User" as user {
+  * user_id : INT
+  --
+  name : VARCHAR
+  email : VARCHAR
+  phone : VARCHAR
+  password_hash : VARCHAR
+}
+
+entity "Table" as table {
+  * table_id : INT
+  --
+  capacity : INT
+  location : VARCHAR
+}
+
+entity "Reservation" as reservation {
+  * reservation_id : INT
+  --
+  user_id : INT
+  table_id : INT
+  date_time : DATETIME
+  status : VARCHAR
+}
+
+entity "MenuItem" as menuitem {
+  * item_id : INT
+  --
+  name : VARCHAR
+  price : DECIMAL
+  description : VARCHAR
+}
+
+entity "Order" as order {
+  * order_id : INT
+  --
+  user_id : INT
+  total_amount : DECIMAL
+  created_at : DATETIME
+}
+
+entity "OrderItem" as orderitem {
+  * orderitem_id : INT
+  --
+  order_id : INT
+  item_id : INT
+  quantity : INT
+}
+
+entity "Payment" as payment {
+  * payment_id : INT
+  --
+  order_id : INT
+  amount : DECIMAL
+  status : VARCHAR
+}
+
+' === ЗВ'ЯЗКИ ===
+
+user ||--o{ reservation : "робить"
+table ||--o{ reservation : "може бути заброньований"
+
+user ||--o{ order : "створює"
+order ||--o{ orderitem : "містить"
+menuitem ||--o{ orderitem : "відповідає товару"
+
+order ||--|| payment : "має 1 оплату"
+
+@enduml

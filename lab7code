@@ -1,0 +1,43 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam component {
+  BackgroundColor #FFF59D
+  BorderColor #000
+  Shadowing false
+}
+
+' ==== Компоненти клієнта ====
+component "Web Client\n(Front-end)" as Frontend
+component "Mobile App" as Mobile
+
+' ==== API / Backend ====
+component "Reservation API\n(Backend Service)" as API
+component "Auth Service" as Auth
+component "Menu Service" as MenuS
+component "Reservation Service" as ReservationS
+component "Payment Service" as PaymentS
+
+' ==== База даних ====
+database "Main Database" as DB
+
+' ==== Зовнішня система ====
+component "External Payment Gateway" as ExtPay
+
+' ==== Зв’язки ====
+
+Frontend --> API : HTTP/REST
+Mobile --> API : HTTP/REST
+
+API --> Auth : авторизація
+API --> MenuS : робота з меню
+API --> ReservationS : запити бронювання
+API --> PaymentS : оплата
+
+ReservationS --> DB : CRUD столиків/бронювань
+MenuS --> DB : читання/оновлення меню
+Auth --> DB : користувачі / токени
+PaymentS --> DB : статуси транзакцій
+
+PaymentS --> ExtPay : обробка платежів
+
+@enduml

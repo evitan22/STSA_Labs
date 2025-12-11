@@ -1,0 +1,32 @@
+@startuml
+' Налаштування стилю
+skinparam objectBackgroundColor #FFF59D
+skinparam objectBorderColor #000
+skinparam ArrowColor #000
+skinparam ArrowThickness 1.2
+skinparam shadowing false
+left to right direction
+
+' Об'єкти системи (collaboration participants)
+object User
+object ReservationSystem
+object TableService
+object Manager
+
+' Повідомлення з нумерацією (communication-style)
+User -[#000]-> ReservationSystem : 1: переглянути доступні столики(dateTime)
+ReservationSystem -[#000]-> TableService : 2: getAvailableTables(dateTime)
+TableService -[#000]-> ReservationSystem : 3: список доступних столиків
+ReservationSystem -[#000]-> User : 4: показати список
+
+User -[#000]-> ReservationSystem : 5: створити бронювання(tableId, dateTime)
+ReservationSystem -[#000]-> TableService : 6: перевірити доступність
+TableService -[#000]-> ReservationSystem : 7: столик вільний
+
+ReservationSystem -[#000]-> Manager : 8: запит на підтвердження
+Manager -[#000]-> Manager : 9: перевірити деталі
+Manager -[#000]-> ReservationSystem : 10: підтвердження
+
+ReservationSystem -[#000]-> User : 11: повідомлення("Бронювання підтверджено")
+
+@enduml
